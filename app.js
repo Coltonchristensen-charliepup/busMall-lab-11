@@ -1,15 +1,14 @@
 'use strict';
-
-
 var allProducts = [];
 var totalSelectionsAllowed = 25;
 var selections = 0;
-var myContentBin = document.getElementById('Bin');
-var imgOneEl = document.getElementById('image-one');
-var imgTwoEl = document.getElementById('image-two');
-var imgThreeEl = document.getElementById('image-three');
-var companyList = document.getElementById('companyList');
-
+var renderQueue = [];
+var myContentBin = document.getElementById('Bin'); // listerner will listen to this container
+var imgOneEl = document.getElementById('image-one'); // images -can give properties from the js
+var imgTwoEl = document.getElementById('image-two'); // images -can give properties from the js
+var imgThreeEl = document.getElementById('image-three'); // images -can give properties from the js
+var companyList = document.getElementById('companyList'); // render results
+console.log(imgOneEl);
 function Products(name) {
   this.name = name;
   this.src = `img/${name}.jpg`;
@@ -17,11 +16,9 @@ function Products(name) {
   this.votes = 0;
   allProducts.push(this);
 }
-
 function getRandomProducts() {
   return Math.floor(Math.random() * allProducts.length);
 }
-
 new Products('bag');
 new Products('banana');
 new Products('bathroom');
@@ -42,31 +39,44 @@ new Products('unicorn');
 new Products('usb');
 new Products('water-can');
 new Products('wine-glass');
-
-function renderProducts() {
-  var productOne = getRandomProducts();
-  var productTwo = getRandomProducts();
-  var productThree = getRandomProducts();
-
-  while (productOne === productTwo) {
-    productTwo = getRandomProducts();
+// function populateRenderQueueWithNot(){ // one or the other
+//   renderQueue = [];
+//   while(renderQueue.length < 3){
+//     var uniqueProduct = getRandomProducts();
+//     while(!renderQueue.includes(uniqueProduct)){
+//       renderQueue.push(uniqueProduct); // if we get here we KNOW its unique and can push into array
+//     }
+//   }
+//   console.log('renderQueue: ', renderQueue);
+// }
+function populateRenderQueueWithoutNot() { // one or the other
+  // renderQueue = [];
+  while (renderQueue.length > 0) { //equivalent of emptying out array (like line 59)
+    renderQueue.pop();
   }
-
-  imgOneEl.src = allProducts[productOne].src;
-  imgOneEl.alt = allProducts[productOne].name;
-  allProducts[productOne].views++;
-
-
-  imgTwoEl.src = allProducts[productTwo].src;
-  imgTwoEl.alt = allProducts[productTwo].name;
-  allProducts[productTwo].views++;
-
-
-  imgThreeEl.src = allProducts[productThree].src;
-  imgThreeEl.alt = allProducts[productThree].name;
-  allProducts[productThree].views++;
+  while (renderQueue.length < 3) {
+    var uniqueProduct = getRandomProducts();
+    while (renderQueue.includes(uniqueProduct)) {
+      uniqueProduct = getRandomProducts();
+    }
+    renderQueue.push(uniqueProduct); // if we get here we KNOW its unique and can push into array
+  }
+  console.log('renderQueue: ', renderQueue);
 }
-
+function imageRenderProperties(imgEl, prod) {
+  imgEl.src = allProducts[prod].src;
+  imgEl.alt = allProducts[prod].name;
+  allProducts[prod].views++;
+}
+function renderProducts() {
+  populateRenderQueueWithoutNot();
+  var productOne = renderQueue[0]; // 1
+  var productTwo = renderQueue[1]; // 4
+  var productThree = renderQueue[2]; // 9
+  imageRenderProperties(imgOneEl, productOne);
+  imageRenderProperties(imgTwoEl, productTwo);
+  imageRenderProperties(imgThreeEl, productThree);
+}
 function renderResults() {
   for (var i = 0; i < allProducts.length; i++) {
     var li = document.createElement('li');
@@ -74,27 +84,29 @@ function renderResults() {
     companyList.appendChild(li);
   }
 }
-
-renderProducts();
-
-
+renderProducts(); // gives us intial images
 function handleSelections(event) {
   var selectedProducts = event.target.alt;
-  selections++;
-
-  for (var i = 0; i < allProducts.length; i++) {
-    if (selectedProducts === allProducts[i].name) {
-      allProducts[i].votes++;
+  // if (selectedProducts === myContentBin){
+  //   alert('click on the damn image');
+  // }
+  if (selectedProducts) {
+    console.log(selectedProducts);
+    selections++;
+    for (var i = 0; i < allProducts.length; i++) {
+      if (selectedProducts === allProducts[i].name) {
+        allProducts[i].votes++;
+      }
     }
+    renderProducts(); // gives us the images after each click
+    console.log(imgOneEl);
+    if (selections === totalSelectionsAllowed) {
+      console.log(selections);
+      myContentBin.removeEventListener('click', handleSelections);
+      renderResults();
+    }
+  } else {
+    alert('click on the damn image');
   }
-  renderProducts();
-
-  if (selections === totalSelectionsAllowed) {
-    myContentBin.removeEventListener('selction', handleSelections);
-
-    renderResults();
-  }
-
 }
-
-myContentBin.addEventListener(`click`, handleSelections);
+myContentBin.addEventListener('click', handleSelections);
