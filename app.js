@@ -118,7 +118,7 @@ console.log('viewsArray', viewsArray, 'nameArray', nameArray, 'votesArray', vote
 }
 
 function makeChart() {
-  recieveInput();
+  recieveInput(votesArray);
 var myChart = new Chart(ctx, {
   type: 'bar',
   data: {
