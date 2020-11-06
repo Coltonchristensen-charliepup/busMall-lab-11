@@ -3,15 +3,16 @@ var allProducts = [];
 var totalSelectionsAllowed = 25;
 var selections = 0;
 var renderQueue = [];
-var myContentBin = document.getElementById('Bin'); // listerner will listen to this container
-var imgOneEl = document.getElementById('image-one'); // images -can give properties from the js
-var imgTwoEl = document.getElementById('image-two'); // images -can give properties from the js
-var imgThreeEl = document.getElementById('image-three'); // images -can give properties from the js
-var companyList = document.getElementById('companyList'); // render results
+var myContentBin = document.getElementById('Bin');
+var imgOneEl = document.getElementById('image-one');
+var imgTwoEl = document.getElementById('image-two');
+var imgThreeEl = document.getElementById('image-three');
+var companyList = document.getElementById('companyList');
 console.log(imgOneEl);
-
 var ctx = document.getElementById('myChart');
-
+var nameArray = [];
+var votesArray = [];
+var viewsArray = [];
 
 function Products(name) {
   this.name = name;
@@ -43,27 +44,18 @@ new Products('unicorn');
 new Products('usb');
 new Products('water-can');
 new Products('wine-glass');
-// function populateRenderQueueWithNot(){ // one or the other
-//   renderQueue = [];
-//   while(renderQueue.length < 3){
-//     var uniqueProduct = getRandomProducts();
-//     while(!renderQueue.includes(uniqueProduct)){
-//       renderQueue.push(uniqueProduct); // if we get here we KNOW its unique and can push into array
-//     }
-//   }
-//   console.log('renderQueue: ', renderQueue);
-// }
-function populateRenderQueueWithoutNot() { // one or the other
-  // renderQueue = [];
-  while (renderQueue.length > 0) { //equivalent of emptying out array (like line 59)
-    renderQueue.pop();
-  }
-  while (renderQueue.length < 3) {
+
+
+function populateRenderQueueWithoutNot() {
+//   while (renderQueue.length > 0) {
+//     renderQueue.pop();
+  // }
+  while (renderQueue.length < 6) {
     var uniqueProduct = getRandomProducts();
     while (renderQueue.includes(uniqueProduct)) {
       uniqueProduct = getRandomProducts();
     }
-    renderQueue.push(uniqueProduct); // if we get here we KNOW its unique and can push into array
+    renderQueue.push(uniqueProduct);
   }
   console.log('renderQueue: ', renderQueue);
 }
@@ -74,9 +66,13 @@ function imageRenderProperties(imgEl, prod) {
 }
 function renderProducts() {
   populateRenderQueueWithoutNot();
-  var productOne = renderQueue[0]; // 1
-  var productTwo = renderQueue[1]; // 4
-  var productThree = renderQueue[2]; // 9
+  // console.log('renderQueue', renderQueue);
+  var productOne = renderQueue.shift();
+  console.log('renderQueue', renderQueue);
+  var productTwo = renderQueue.shift();
+  console.log('renderQueue', renderQueue);
+  var productThree = renderQueue.shift();
+  console.log('renderQueue', renderQueue);
   imageRenderProperties(imgOneEl, productOne);
   imageRenderProperties(imgTwoEl, productTwo);
   imageRenderProperties(imgThreeEl, productThree);
@@ -88,12 +84,10 @@ function renderResults() {
     companyList.appendChild(li);
   }
 }
-renderProducts(); // gives us intial images
+renderProducts();
+
 function handleSelections(event) {
   var selectedProducts = event.target.alt;
-  // if (selectedProducts === myContentBin){
-  //   alert('click on the damn image');
-  // }
   if (selectedProducts) {
     console.log(selectedProducts);
     selections++;
@@ -102,25 +96,36 @@ function handleSelections(event) {
         allProducts[i].votes++;
       }
     }
-    renderProducts(); // gives us the images after each click
+    renderProducts();
     console.log(imgOneEl);
     if (selections === totalSelectionsAllowed) {
       console.log(selections);
       myContentBin.removeEventListener('click', handleSelections);
       renderResults();
+      makeChart();
     }
   } else {
-    alert('click on the damn image');
+    alert('click on the image');
   }
 }
+function recieveInput() {
+for(var i = 0; i < allProducts.length; i++) {
+viewsArray.push(allProducts[i].views);
+nameArray.push(allProducts[i].name);
+votesArray.push(allProducts[i].votes);
+}
+console.log('viewsArray', viewsArray, 'nameArray', nameArray, 'votesArray', votesArray);
+}
 
+function makeChart() {
+  recieveInput();
 var myChart = new Chart(ctx, {
   type: 'bar',
   data: {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+    labels: nameArray,
     datasets: [{
       label: '# of Votes',
-      data: [12, 19, 3, 5, 2, 3],
+      data: votesArray,
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
         'rgba(54, 162, 235, 0.2)',
@@ -150,7 +155,7 @@ var myChart = new Chart(ctx, {
     }
   }
 });
-
+}
 
 
 myContentBin.addEventListener('click', handleSelections);
