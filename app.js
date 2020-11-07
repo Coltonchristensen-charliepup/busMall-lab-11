@@ -24,26 +24,35 @@ function Products(name) {
 function getRandomProducts() {
   return Math.floor(Math.random() * allProducts.length);
 }
-new Products('bag');
-new Products('banana');
-new Products('bathroom');
-new Products('boots');
-new Products('breakfast');
-new Products('bubblegum');
-new Products('chair');
-new Products('cthulhu');
-new Products('dog-duck');
-new Products('dragon');
-new Products('pen');
-new Products('pet-sweep');
-new Products('scissors');
-new Products('shark');
-new Products('sweep');
-new Products('tauntaun');
-new Products('unicorn');
-new Products('usb');
-new Products('water-can');
-new Products('wine-glass');
+
+var retrievedResults = localStorage.getItem('allProductsResults');
+if(retrievedResults){
+var parsedRetrievedResults = JSON.parse(retrievedResults);
+console.log(parsedRetrievedResults);
+allProducts = parsedRetrievedResults;
+} else {
+  new Products('bag');
+  new Products('banana');
+  new Products('bathroom');
+  new Products('boots');
+  new Products('breakfast');
+  new Products('bubblegum');
+  new Products('chair');
+  new Products('cthulhu');
+  new Products('dog-duck');
+  new Products('dragon');
+  new Products('pen');
+  new Products('pet-sweep');
+  new Products('scissors');
+  new Products('shark');
+  new Products('sweep');
+  new Products('tauntaun');
+  new Products('unicorn');
+  new Products('usb');
+  new Products('water-can');
+  new Products('wine-glass');
+  
+}
 
 
 function populateRenderQueueWithoutNot() {
@@ -98,11 +107,14 @@ function handleSelections(event) {
     }
     renderProducts();
     console.log(imgOneEl);
+   
     if (selections === totalSelectionsAllowed) {
       console.log(selections);
       myContentBin.removeEventListener('click', handleSelections);
       renderResults();
       makeChart();
+      var stringifedResults = JSON.stringify(allProducts);
+      localStorage.setItem('allProductsResults', stringifedResults);
     }
   } else {
     alert('click on the image');
@@ -156,6 +168,7 @@ var myChart = new Chart(ctx, {
   }
 });
 }
+
 
 
 myContentBin.addEventListener('click', handleSelections);
