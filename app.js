@@ -8,7 +8,7 @@ var imgOneEl = document.getElementById('image-one');
 var imgTwoEl = document.getElementById('image-two');
 var imgThreeEl = document.getElementById('image-three');
 var companyList = document.getElementById('companyList');
-console.log(imgOneEl);
+// console.log(imgOneEl);
 var ctx = document.getElementById('myChart');
 var nameArray = [];
 var votesArray = [];
@@ -28,7 +28,7 @@ function getRandomProducts() {
 var retrievedResults = localStorage.getItem('allProductsResults');
 if(retrievedResults){
 var parsedRetrievedResults = JSON.parse(retrievedResults);
-console.log(parsedRetrievedResults);
+// console.log(parsedRetrievedResults);
 allProducts = parsedRetrievedResults;
 } else {
   new Products('bag');
@@ -66,7 +66,7 @@ function populateRenderQueueWithoutNot() {
     }
     renderQueue.push(uniqueProduct);
   }
-  console.log('renderQueue: ', renderQueue);
+  // console.log('renderQueue: ', renderQueue);
 }
 function imageRenderProperties(imgEl, prod) {
   imgEl.src = allProducts[prod].src;
@@ -77,11 +77,11 @@ function renderProducts() {
   populateRenderQueueWithoutNot();
   // console.log('renderQueue', renderQueue);
   var productOne = renderQueue.shift();
-  console.log('renderQueue', renderQueue);
+  // console.log('renderQueue', renderQueue);
   var productTwo = renderQueue.shift();
-  console.log('renderQueue', renderQueue);
+  // console.log('renderQueue', renderQueue);
   var productThree = renderQueue.shift();
-  console.log('renderQueue', renderQueue);
+  // console.log('renderQueue', renderQueue);
   imageRenderProperties(imgOneEl, productOne);
   imageRenderProperties(imgTwoEl, productTwo);
   imageRenderProperties(imgThreeEl, productThree);
@@ -98,7 +98,7 @@ renderProducts();
 function handleSelections(event) {
   var selectedProducts = event.target.alt;
   if (selectedProducts) {
-    console.log(selectedProducts);
+    // console.log(selectedProducts);
     selections++;
     for (var i = 0; i < allProducts.length; i++) {
       if (selectedProducts === allProducts[i].name) {
@@ -106,10 +106,10 @@ function handleSelections(event) {
       }
     }
     renderProducts();
-    console.log(imgOneEl);
+    // console.log(imgOneEl);
    
     if (selections === totalSelectionsAllowed) {
-      console.log(selections);
+      // console.log(selections);
       myContentBin.removeEventListener('click', handleSelections);
       renderResults();
       makeChart();
@@ -126,7 +126,7 @@ viewsArray.push(allProducts[i].views);
 nameArray.push(allProducts[i].name);
 votesArray.push(allProducts[i].votes);
 }
-console.log('viewsArray', viewsArray, 'nameArray', nameArray, 'votesArray', votesArray);
+// console.log('viewsArray', viewsArray, 'nameArray', nameArray, 'votesArray', votesArray);
 }
 
 function makeChart() {
