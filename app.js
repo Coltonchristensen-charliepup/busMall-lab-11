@@ -26,10 +26,10 @@ function getRandomProducts() {
 }
 
 var retrievedResults = localStorage.getItem('allProductsResults');
-if(retrievedResults){
-var parsedRetrievedResults = JSON.parse(retrievedResults);
-// console.log(parsedRetrievedResults);
-allProducts = parsedRetrievedResults;
+if (retrievedResults) {
+  var parsedRetrievedResults = JSON.parse(retrievedResults);
+  // console.log(parsedRetrievedResults);
+  allProducts = parsedRetrievedResults;
 } else {
   new Products('bag');
   new Products('banana');
@@ -51,13 +51,13 @@ allProducts = parsedRetrievedResults;
   new Products('usb');
   new Products('water-can');
   new Products('wine-glass');
-  
+
 }
 
 
 function populateRenderQueueWithoutNot() {
-//   while (renderQueue.length > 0) {
-//     renderQueue.pop();
+  //   while (renderQueue.length > 0) {
+  //     renderQueue.pop();
   // }
   while (renderQueue.length < 6) {
     var uniqueProduct = getRandomProducts();
@@ -107,7 +107,7 @@ function handleSelections(event) {
     }
     renderProducts();
     // console.log(imgOneEl);
-   
+
     if (selections === totalSelectionsAllowed) {
       // console.log(selections);
       myContentBin.removeEventListener('click', handleSelections);
@@ -121,52 +121,52 @@ function handleSelections(event) {
   }
 }
 function recieveInput() {
-for(var i = 0; i < allProducts.length; i++) {
-viewsArray.push(allProducts[i].views);
-nameArray.push(allProducts[i].name);
-votesArray.push(allProducts[i].votes);
-}
-// console.log('viewsArray', viewsArray, 'nameArray', nameArray, 'votesArray', votesArray);
+  for (var i = 0; i < allProducts.length; i++) {
+    viewsArray.push(allProducts[i].views);
+    nameArray.push(allProducts[i].name);
+    votesArray.push(allProducts[i].votes);
+  }
+  // console.log('viewsArray', viewsArray, 'nameArray', nameArray, 'votesArray', votesArray);
 }
 
 function makeChart() {
   recieveInput(votesArray);
-var myChart = new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: nameArray,
-    datasets: [{
-      label: '# of Votes',
-      data: votesArray,
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 206, 86, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(153, 102, 255, 0.2)',
-        'rgba(255, 159, 64, 0.2)'
-      ],
-      borderColor: [
-        'rgba(255, 99, 132, 1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)'
-      ],
-      borderWidth: 1
-    }]
-  },
-  options: {
-    scales: {
-      yAxes: [{
-        ticks: {
-          beginAtZero: true
-        }
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: nameArray,
+      datasets: [{
+        label: '# of Votes',
+        data: votesArray,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1
       }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
     }
-  }
-});
+  });
 }
 
 
